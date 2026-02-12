@@ -1,0 +1,144 @@
+---
+title: Integrations and Connectors
+description: Connect BigLink to various advertising and analytics platforms to automatically pull and unify your data for comprehensive analysis.
+---
+
+## Overview
+
+BigLink supports seamless integrations with major advertising and analytics platforms. You connect your accounts to pull data automatically, enabling unified analysis across sources. This eliminates manual data exports and spreadsheets.
+
+Supported platforms include Meta Ads (covering Facebook and Instagram), Google Ads, Google Analytics, YouTube, TikTok, LinkedIn, and Pinterest. Organic insights from social platforms are also available.
+
+<Callout kind="info">
+Before starting, ensure you have admin access to your ad accounts and analytics properties. Generate API keys or OAuth tokens as required for each platform.
+</Callout>
+
+## Key Integrations
+
+<Columns cols={3}>
+  <Card title="Meta Ads" icon="facebook" href="#meta-setup">
+    Connect Facebook, Instagram campaigns for ROAS and CPA metrics.
+  </Card>
+  <Card title="Google Ecosystem" icon="google" href="#google-setup">
+    Link Ads, Analytics, and YouTube for cross-channel insights.
+  </Card>
+  <Card title="Social & Emerging" icon="trending-up" href="#social-setup">
+    TikTok, LinkedIn, Pinterest, plus organic social data.
+  </Card>
+</Columns>
+
+## General Connection Process
+
+Follow these steps to add any integration via the BigLink dashboard.
+
+<Steps>
+  <Step title="Navigate to Integrations" icon="settings">
+    Log in to your dashboard at `https://dashboard.example.com/integrations`.
+  </Step>
+  <Step title="Select Platform" icon="plus">
+    Click **Add Integration** and choose your platform from the list.
+  </Step>
+  <Step title="Authorize Access" icon="key">
+    Enter your API credentials or complete OAuth flow. BigLink uses secure tokens only.
+  </Step>
+  <Step title="Verify Sync" icon="check-circle">
+    Test the connection and confirm data is pulling (first sync takes `<5` minutes).
+  </Step>
+</Steps>
+
+## Platform-Specific Setup
+
+<Tabs>
+  <Tab title="Meta (Facebook/Instagram)" icon="facebook">
+
+    ### Prerequisites
+    Create a system user in Meta Business Manager with `ads_read` and `ads_management` permissions.
+
+    <ParamField header="Authorization" param-type="string" required="true">
+      Bearer token from Meta Graph API.
+    </ParamField>
+
+    <Steps>
+      <Step title="Get Token">
+        Visit `https://developers.facebook.com/tools/explorer/` and generate a token.
+      </Step>
+      <Step title="Paste in BigLink">
+        Enter ad account ID (e.g., `act_123456789`) and token.
+      </Step>
+      <Step title="Sync Data">
+        Enable daily auto-sync for campaigns and insights.
+      </Step>
+    </Steps>
+
+  </Tab>
+
+  <Tab title="Google Ads/Analytics/YouTube" icon="google">
+
+    Use Google Cloud Console to set up OAuth.
+
+    <CodeGroup tabs="Google Ads,Analytics">
+      ````json
+      {
+        "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+        "client_secret": "YOUR_CLIENT_SECRET",
+        "redirect_uri": "https://dashboard.example.com/auth/google/callback"
+      }
+      ````
+      ````json
+      {
+        "property_id": "123456789",
+        "refresh_token": "YOUR_REFRESH_TOKEN"
+      }
+      ````
+    </CodeGroup>
+
+    <Callout kind="tip">
+      Link multiple properties. BigLink unifies metrics like sessions, conversions, and views.
+    </Callout>
+
+  </Tab>
+
+  <Tab title="TikTok/LinkedIn/Pinterest" icon="trending-up">
+
+    For TikTok: Generate advertiser access token via Ads Manager.
+
+    <ParamField query="access_token" param-type="string" required="true">
+      TikTok advertiser token (valid 24 hours; use refresh).
+    </ParamField>
+
+    LinkedIn/Pinterest follow similar OAuth flows. Select scopes: `r_ads`, `r_organization.social`.
+
+    <Expandable title="Organic Social Insights" default-open="false">
+      Connect via API for likes, shares, and engagement without ad data.
+      
+      Example Pinterest query:
+      ````bash
+      curl "https://api.pinterest.com/v5/user_account/analytics" \
+        -H "Authorization: Bearer YOUR_TOKEN"
+      ````
+    </Expandable>
+
+  </Tab>
+</Tabs>
+
+## Managing Integrations
+
+Once connected, monitor status in the dashboard.
+
+| Platform | Status | Last Sync | Actions |
+|----------|--------|-----------|---------|
+| Meta Ads | Active | 2 min ago | Edit, Pause, Delete |
+| Google Ads | Active | 1 min ago | Refresh, Test |
+| TikTok | Pending | N/A | Retry |
+
+<Callout kind="alert">
+Pause integrations during account changes to avoid data gaps. BigLink retains 30 days of history post-disconnect.
+</Callout>
+
+## Troubleshooting
+
+- **Sync delays**: Check rate limits; retry after 15 minutes.
+- **Auth errors**: Regenerate tokens and ensure scopes include read access.
+- **Missing data**: Verify ad account permissions in platform settings.
+
+For custom webhooks, use `https://api.example.com/v1/webhooks` endpoint with HMAC verification. Contact support for enterprise connectors.
