@@ -122,6 +122,17 @@
             "icon": "history"
           }
         ]
+      },
+      {
+        "tab": "Recursos",
+        "pages": [
+          {
+            "title": "Chat BigLink",
+            "path": "chat-biglink",
+            "icon": "lucide-person-standing"
+          }
+        ],
+        "icon": "album-icon"
       }
     ]
   }
